@@ -1,0 +1,967 @@
+/* Reset a základní styly */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: url('/static/images/pozadi.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+    /* Zakázání zoomu při dvojkliku na mobilních zařízeních */
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Box-style komponenty */
+.box {
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.box-container {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Screen management */
+.screen {
+    display: none;
+}
+
+.screen:not(.hidden) {
+    display: block;
+}
+
+/* Login Screen */
+#login-screen:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/static/images/pozadi.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 20px;
+}
+
+/* Header - Nadpis společný pro všechny obrazovky */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 3.0em; /* Zvětšeno o 1/5 (2.5em * 1.2) */
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.8), 0 0 10px rgba(255,255,255,0.5);
+    cursor: pointer;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+}
+
+/* Login box */
+.login-box {
+    min-width: 400px;
+    max-width: 100%;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    color: #667eea;
+    text-align: center;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.login-box input:focus {
+    border-color: #667eea;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Error messages */
+.error-message {
+    color: #dc3545;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8d7da;
+    border-radius: 6px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Lobby Screen */
+#lobby-screen:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/static/images/pozadi.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 20px;
+}
+
+/* Lobby box */
+.lobby-box {
+    min-width: 500px;
+    max-width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+}
+
+.lobby-box h2 {
+    margin-bottom: 20px;
+    color: #667eea;
+    text-align: center;
+}
+
+/* Seznam hráčů */
+.players-list {
+    margin-bottom: 20px;
+}
+
+/* Player item styly */
+.player-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: #f5f5f5;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-item.ready {
+    background: #d4edda;
+    border-color: #28a745;
+}
+
+.player-item-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-item .player-name {
+    font-weight: bold;
+}
+
+.player-item .ready-status {
+    color: #28a745;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+/* Color Selection */
+.color-selection {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.color-selection label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.color-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    border-color: #333;
+}
+
+.color-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Solo Mode - na login page */
+button.solo-mode-btn.btn-secondary {
+    margin-top: 10px;
+    width: 100%;
+    transition: all 0.3s;
+    background: #6c757d !important;
+    color: white !important;
+    border-color: #6c757d !important;
+    cursor: pointer;
+}
+
+button.solo-mode-btn.btn-secondary:hover {
+    background: #5a6268 !important;
+    border-color: #5a6268 !important;
+}
+
+button.solo-mode-btn.btn-secondary.active {
+    background: #495057 !important;
+    color: white !important;
+    border-color: #495057 !important;
+}
+
+button.solo-mode-btn.btn-secondary.active:hover {
+    background: #3d4146 !important;
+    border-color: #3d4146 !important;
+}
+
+/* Status message */
+.status-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.status-message.waiting {
+    color: #667eea;
+    background: #e7f0ff;
+}
+
+.status-message.ready {
+    color: #28a745;
+    background: #d4edda;
+}
+
+.status-message.playing {
+    color: #ff9800;
+    background: #fff3e0;
+}
+
+.status-message.finished {
+    color: #dc3545;
+    background: #f8d7da;
+}
+
+/* Game Screen */
+.game-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    padding-top: 100px; /* Místo pro nadpis */
+    overflow: auto;
+}
+
+/* Klikací nadpis */
+.game-title {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2.67em;
+    margin: 0 0 10px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.game-title:hover {
+    transform: scale(1.05);
+}
+
+.game-title:active {
+    transform: scale(0.98);
+}
+
+/* Main Game Area - Board uprostřed, Sidebar vlevo */
+.game-main-area {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    position: relative;
+}
+
+/* Left Sidebar - Kostka a Hráči */
+.game-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+    position: relative;
+    z-index: 2;
+    align-self: center;
+    margin-top: 0;
+}
+
+/* Zmenšení sidebaru při menších obrazovkách (před změnou layoutu) */
+@media (max-width: 1149px) and (min-width: 951px) {
+    .game-sidebar {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+}
+
+/* Players Box */
+.players-box {
+    margin-bottom: 0;
+}
+
+.players-box h3 {
+    margin-bottom: 15px;
+    color: #667eea;
+    font-size: 1.1em;
+    margin-top: 0;
+    text-align: center;
+}
+
+/* Statistics Box */
+.statistics-box {
+    margin-bottom: 0;
+    margin-top: 20px;
+}
+
+.statistics-box h3 {
+    margin-bottom: 15px;
+    color: #667eea;
+    font-size: 1.1em;
+    margin-top: 0;
+    text-align: center;
+}
+
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    font-size: 0.95em;
+}
+
+.stat-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.stat-value {
+    color: #333;
+    font-weight: bold;
+}
+
+/* Dice Box - v sidebaru */
+.dice-box {
+    width: 100% !important;
+    min-width: auto !important;
+    max-width: 100% !important;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    margin: 0 !important;
+    border: 3px solid #ddd !important;
+    box-shadow: none !important;
+    box-sizing: border-box;
+}
+
+.dice-box h3 {
+    margin-bottom: 10px;
+    color: #667eea;
+    font-size: 1.1em;
+    margin-top: 0;
+}
+
+.dice-box .dice {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #667eea;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    background: white;
+    color: #667eea;
+    margin: 10px auto;
+}
+
+.dice-box .btn-primary {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Players Container */
+.players-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.player-card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px !important;
+    width: 100% !important;
+    min-width: auto !important;
+    max-width: 100% !important;
+    border: 3px solid #ddd !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+.player-card.current {
+    border-color: #667eea !important;
+    background: #e7f0ff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.player-card .player-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+}
+
+/* Game Board Container - responzivní, kopíruje herní desku, vycentrovaný uprostřed obrazovky */
+.game-board-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    z-index: 1;
+    width: auto;
+    height: auto;
+}
+
+/* Upravíme pozicování herní plochy při menších obrazovkách, aby se bral v úvahu sidebar */
+/* Od 1460px do 951px - posuneme herní plochu doprava */
+@media (max-width: 1460px) and (min-width: 1300px) {
+    .game-board-container {
+        /* Posuneme herní plochu doprava, aby se neprekryvala se sidebarem */
+        left: calc(50% + 125px); /* Polovina sidebaru (250px / 2) */
+    }
+}
+
+@media (max-width: 1299px) and (min-width: 1150px) {
+    .game-board-container {
+        /* Posuneme herní plochu doprava, aby se neprekryvala se sidebarem */
+        left: calc(50% + 125px); /* Polovina sidebaru (250px / 2) */
+    }
+}
+
+@media (max-width: 1149px) and (min-width: 1000px) {
+    .game-board-container {
+        /* Posuneme herní plochu doprava, aby se neprekryvala se sidebarem */
+        left: calc(50% + 110px); /* Polovina sidebaru (220px / 2) */
+    }
+}
+
+@media (max-width: 999px) and (min-width: 951px) {
+    .game-board-container {
+        /* Posuneme herní plochu doprava, aby se neprekryvala se sidebarem */
+        left: calc(50% + 110px); /* Polovina sidebaru (220px / 2) */
+    }
+}
+
+.game-board {
+    width: auto;
+    height: auto;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    position: relative;
+    aspect-ratio: 1;
+    max-width: min(calc(100vw - 290px), calc(100vh - 200px));
+    max-height: min(calc(100vw - 290px), calc(100vh - 200px));
+    width: min(calc(100vw - 290px), calc(100vh - 200px));
+    height: min(calc(100vw - 290px), calc(100vh - 200px));
+}
+
+/* Zmenšování herní plochy od 1470px do 950px, aby se elementy nepřekrývaly */
+/* Progresivní zmenšování - začíná už od 1470px */
+@media (max-width: 1470px) and (min-width: 1300px) {
+    .game-board {
+        max-width: min(calc(100vw - 350px), calc(100vh - 200px));
+        max-height: min(calc(100vw - 350px), calc(100vh - 200px));
+        width: min(calc(100vw - 350px), calc(100vh - 200px));
+        height: min(calc(100vw - 350px), calc(100vh - 200px));
+    }
+}
+
+@media (max-width: 1299px) and (min-width: 1150px) {
+    .game-board {
+        max-width: min(calc(100vw - 400px), calc(100vh - 200px));
+        max-height: min(calc(100vw - 400px), calc(100vh - 200px));
+        width: min(calc(100vw - 400px), calc(100vh - 200px));
+        height: min(calc(100vw - 400px), calc(100vh - 200px));
+    }
+}
+
+@media (max-width: 1149px) and (min-width: 1000px) {
+    .game-board {
+        max-width: min(calc(100vw - 450px), calc(100vh - 200px));
+        max-height: min(calc(100vw - 450px), calc(100vh - 200px));
+        width: min(calc(100vw - 450px), calc(100vh - 200px));
+        height: min(calc(100vw - 450px), calc(100vh - 200px));
+    }
+}
+
+/* Pro šířky 999px-951px - ještě větší zmenšení, protože je to blízko breakpointu 950px */
+@media (max-width: 999px) and (min-width: 951px) {
+    .game-board {
+        max-width: min(calc(100vw - 500px), calc(100vh - 200px));
+        max-height: min(calc(100vw - 500px), calc(100vh - 200px));
+        width: min(calc(100vw - 500px), calc(100vh - 200px));
+        height: min(calc(100vw - 500px), calc(100vh - 200px));
+    }
+}
+
+.game-board svg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Zakázání zoomu při dvojkliku na mobilních zařízeních */
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+}
+
+/* SVG Board */
+.ludo-board-svg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.ludo-board-svg .piece-group {
+    transition: all 0.3s;
+}
+
+.ludo-board-svg .piece-group.clickable {
+    cursor: pointer;
+    animation: blinkPiece 0.8s infinite;
+}
+
+.ludo-board-svg .piece-group.clickable circle {
+    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.8));
+}
+
+.ludo-board-svg .piece-group:hover {
+    opacity: 0.9;
+}
+
+@keyframes blinkPiece {
+    0%, 100% { 
+        opacity: 1;
+    }
+    50% { 
+        opacity: 0.3;
+    }
+}
+
+/* Actions Box */
+.actions-box {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.actions-box .btn-primary {
+    margin: 5px;
+    width: auto;
+    min-width: 150px;
+}
+
+.actions-box .btn-primary.hidden {
+    display: none;
+}
+
+/* Messages Box (Chat) */
+.messages-box {
+    margin-bottom: 20px;
+}
+
+.messages-box h3 {
+    margin-bottom: 15px;
+    color: #667eea;
+}
+
+.messages {
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: auto;
+    align-items: stretch;
+}
+
+.message {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.message.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.message .message-time {
+    font-size: 0.85em;
+    color: #666;
+    white-space: nowrap;
+}
+
+.message .message-text {
+    flex: 1;
+}
+
+/* Hand Box (Figurky) */
+/* Hand box byl odstraněn */
+
+.my-pieces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.piece-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: default;
+    transition: all 0.3s;
+}
+
+.piece-item.clickable {
+    cursor: pointer;
+    border-color: #667eea;
+}
+
+.piece-item.clickable:hover {
+    background: #f0f4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+}
+
+.piece-visual {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+.piece-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.piece-status {
+    font-size: 0.9em;
+    color: #666;
+}
+
+
+/* Responzivní design - změna layoutu od 950px */
+@media (max-width: 950px) {
+    .login-box {
+        min-width: auto;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .login-box input {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 14px;
+    }
+    
+    .lobby-box {
+        min-width: auto;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .player-item {
+        padding: 14px;
+        font-size: 16px;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 14px 24px;
+        font-size: 16px;
+        min-height: 44px; /* Touch-friendly size */
+    }
+    
+    /* Zvětšení nadpisu o 1/5 na mobilu */
+    header h1 {
+        font-size: 2.16em; /* 1.8em * 1.2 */
+        margin-bottom: 15px;
+    }
+    
+    .game-title {
+        font-size: 1.8em; /* 1.5em * 1.2 */
+        margin-bottom: 15px;
+    }
+    
+    /* Přidání padding-top pro game-container, aby se nadpis nepřekrýval s herní plochou */
+    .game-container {
+        padding-top: 120px !important; /* Více místa pro nadpis na mobilu */
+    }
+    
+    /* Změna layoutu - sidebar pod herní plochou */
+    .game-main-area {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .game-sidebar {
+        width: 100% !important;
+        min-width: auto !important;
+        max-width: 100% !important;
+        order: 2; /* Sidebar pod herní plochou */
+        align-self: stretch;
+    }
+    
+    .game-board-container {
+        order: 1; /* Herní plocha nahoře */
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        height: auto !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .game-board {
+        max-width: min(calc(100vw - 40px), calc(100vh - 450px)); /* Více místa pro nadpis */
+        max-height: min(calc(100vw - 40px), calc(100vh - 450px));
+        width: min(calc(100vw - 40px), calc(100vh - 450px));
+        height: min(calc(100vw - 40px), calc(100vh - 450px));
+        min-height: 300px;
+    }
+    
+    .dice-box .dice {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 2em !important;
+    }
+    
+    .players-container {
+        gap: 8px !important;
+        flex-direction: column !important;
+    }
+    
+    .player-card {
+        width: 100% !important;
+        min-width: auto !important;
+        max-width: 100% !important;
+        padding: 10px !important;
+    }
+    
+    .hand-box {
+        margin-bottom: 15px;
+    }
+    
+    .hand {
+        gap: 8px;
+    }
+    
+    .messages-box {
+        margin-bottom: 15px;
+    }
+    
+    .messages {
+        max-height: 150px;
+        font-size: 0.9em;
+    }
+    
+    .message {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+}
+
+/* Scrollbar styling pro messages bylo odstraněno */
+

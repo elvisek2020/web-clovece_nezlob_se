@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Člověče, nezlob se</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header - Nadpis společný pro všechny obrazovky -->
+    <header>
+        <h1 id="main-title" style="cursor: pointer;" title="Klikni pro obnovení stránky">Člověče, nezlob se</h1>
+    </header>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <div class="box login-box">
+            <h2>Přihlášení</h2>
+            <input type="text" id="player-name" placeholder="Zadejte vaše jméno" maxlength="20">
+            <button id="join-btn" class="btn-primary">Připojit se</button>
+            <button id="solo-mode-btn" class="btn-secondary solo-mode-btn">Solo režim</button>
+            <div id="login-error" class="error-message"></div>
+            <div style="text-align: center; margin-top: 20px; font-size: 0.85em; color: #666;">v.20251229.0750</div>
+        </div>
+    </div>
+
+    <!-- Lobby Screen -->
+    <div id="lobby-screen" class="screen hidden">
+        <div class="box lobby-box">
+            <h2>Lobby</h2>
+            <div id="players-list" class="players-list"></div>
+            <div id="color-selection" class="color-selection" style="display: none;">
+                <label>Vyberte barvu:</label>
+                <div id="color-buttons" class="color-buttons"></div>
+            </div>
+            <button id="ready-btn" class="btn-primary">Připraven</button>
+            <button id="start-game-btn" class="btn-primary" style="display: none;">Spustit hru</button>
+            <button id="leave-btn" class="btn-secondary">Odejít</button>
+            <div id="lobby-status" class="status-message"></div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-container">
+            <!-- Main Game Area -->
+            <div class="game-main-area">
+                <!-- Left Sidebar: Dice and Players -->
+                <div class="game-sidebar">
+                    <!-- Dice Info -->
+                    <div class="box dice-box">
+                        <h3>Kostka</h3>
+                        <div id="dice" class="dice">?</div>
+                        <button id="roll-dice-btn" class="btn-primary" disabled>Hodit kostkou</button>
+                    </div>
+
+                    <!-- Players Box -->
+                    <div class="box players-box">
+                        <h3>Hráči</h3>
+                        <div id="players-container" class="players-container"></div>
+                    </div>
+
+                    <!-- Statistics Box -->
+                    <div class="box statistics-box">
+                        <h3>Statistika</h3>
+                        <div id="statistics-container" class="statistics-container"></div>
+                    </div>
+
+                    <!-- Solo Mode: End Game Button -->
+                    <div id="solo-end-game-box" class="box" style="display: none;">
+                        <button id="end-game-btn" class="btn-secondary">Ukončit hru</button>
+                    </div>
+                </div>
+
+                <!-- Game Board -->
+                <div class="box game-board-container">
+                    <div id="game-board" class="game-board">
+                        <!-- Hrací plocha bude vykreslena JavaScriptem -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
