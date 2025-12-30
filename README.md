@@ -314,12 +314,6 @@ Aplikace používá **box-style komponenty** pro konzistentní vzhled:
 - [Docker dokumentace](https://docs.docker.com/)
 - [SVG dokumentace](https://developer.mozilla.org/en-US/docs/Web/SVG)
 
-Více informací najdete v dokumentaci:
-
-- `_docs/CHYBY_V_HERNI_LOGICE.md` - Nalezené chyby a opravy
-- `_docs/CURSOR_REBUILD_TAHY_A_CIL.md` - Specifikace pravidel pohybu figurek
-- `_docs/ARCHITEKTURA_A_NAVOD_PRO_PODOBNE_APLIKACE.md` - Architektura a návod pro podobné aplikace
-
-## 📄 Licence
+📄 Licence
 
 Tento projekt je vytvořen pro vzdělávací účely.
