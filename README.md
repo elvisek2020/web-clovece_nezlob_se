@@ -2,6 +2,8 @@
 
 Real-time multiplayer webová aplikace pro hru Člověče, nezlob se (Ludo) v prohlížeči.
 
+![Screenshot hry](images/screen-ludo.png)
+
 ## 📋 Popis
 
 Online verze klasické deskové hry Člověče, nezlob se pro 2-4 hráče nebo solo režim. Hra běží v reálném čase pomocí WebSocket komunikace. Všichni hráči se připojují do jednoho společného lobby a hrají spolu. Aplikace podporuje také solo režim, kde jeden hráč hraje za všechny barvy.
@@ -108,57 +110,7 @@ services:
     image: ghcr.io/elvisek2020/web-clovece_nezlob_se:sha-<commit-sha>
 ```
 
-### GitHub a CI/CD
-
-#### Inicializace repozitáře
-
-1. **Vytvoření GitHub repozitáře**:
-
-   ```bash
-   # Vytvořte nový repozitář na GitHubu
-   # Název: web-clovece_nezlob_se
-   ```
-2. **Inicializace lokálního repozitáře**:
-
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/elvisek2020/web-clovece_nezlob_se.git
-   git push -u origin main
-   ```
-3. **Vytvoření GitHub Actions workflow**:
-
-   Vytvořte soubor `.github/workflows/docker.yml` - viz [příklad workflow](.github/workflows/docker.yml) v tomto repozitáři.
-4. **Nastavení viditelnosti image**:
-
-   - Po prvním buildu jděte na GitHub → Packages
-   - Najděte vytvořený package `web-clovece_nezlob_se`
-   - V Settings → Change visibility nastavte na **Public**
-
-#### Commitování změn a automatické buildy
-
-1. **Proveďte změny v kódu**
-2. **Commit a push**:
-
-   ```bash
-   git add .
-   git commit -m "Popis změn"
-   git push origin main
-   ```
-3. **Automatický build**:
-
-   - Po push do `main` branch se automaticky spustí GitHub Actions workflow
-   - Vytvoří se Docker image pro `linux/amd64` a `linux/arm64`
-   - Image se nahraje do GHCR
-   - Taguje se jako `latest` a `sha-<commit-sha>`
-4. **Sledování buildu**:
-
-   - GitHub → Actions → zobrazí se běžící workflow
-   - Po dokončení je image dostupná na `ghcr.io/elvisek2020/web-clovece_nezlob_se:latest`
-
-#### GitHub Container Registry (GHCR)
+### GitHub Container Registry (GHCR)
 
 Aplikace je dostupná jako Docker image z GitHub Container Registry:
 
@@ -292,20 +244,6 @@ Aplikace používá **box-style komponenty** pro konzistentní vzhled:
 - Automatické reconnect při ztrátě spojení (token se ukládá do sessionStorage)
 - Zobrazení statistik hráčů během hry
 - Barevné rozlišení hráčů v lobby i během hry
-
-### 📝 Historie změn
-
-#### v.20251229.0750
-
-- ✅ **Opravena kritická chyba**: Automatické ukončení tahu, když hráč nemá žádné legální tahy
-- ✅ **Opraveno logování**: Výsledek pohybu se nyní správně loguje (`action` místo `status`)
-- ✅ **Vylepšeno**: Přidána kontrola možných tahů po hodu kostkou
-- ✅ **Vylepšeno**: Automatické ukončení tahu při šestce bez legálních tahů (extra hod propadne)
-
-### 🐛 Známé problémy
-
-- Žádné kritické problémy - všechny nalezené chyby byly opraveny
-- Solo režim: Boti (virtuální hráči) jsou automaticky vytvářeni při startu hry, ale nejsou inteligentní - hrají náhodně
 
 ### 📚 Další zdroje
 
