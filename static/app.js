@@ -228,9 +228,12 @@ function handleMessage(message) {
 
         case "player_connection_lost":
         case "player_disconnected":
+        case "player_reconnected":
+            if (message.message) showToast(message.message);
             break;
 
         case "game_reset":
+            if (message.message) showToast(message.message);
             showScreen("login-screen");
             clearSession();
             break;
@@ -339,6 +342,18 @@ function showError(message) {
     } else {
         alert(message);
     }
+}
+
+function showToast(text) {
+    const toast = document.createElement("div");
+    toast.className = "game-toast";
+    toast.textContent = text;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("show"));
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
 }
 
 // ── Lobby handlers ───────────────────────────────

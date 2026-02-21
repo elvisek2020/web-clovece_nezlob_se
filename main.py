@@ -37,9 +37,11 @@ PLAYER_NAME_MAX_LENGTH = 20
 PLAYER_NAME_PATTERN = re.compile(r'^[\w\s\-áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]{1,20}$')
 WS_PING_INTERVAL = 30
 PLAYER_DISCONNECT_TIMEOUT = 120
+DISCONNECT_GRACE_PERIOD = 15
 CLEANUP_CHECK_INTERVAL = 15
 MAX_ROOMS = 50
 EMPTY_ROOM_TIMEOUT = 300  # smazat prázdnou místnost po 5 min
+GAME_INACTIVITY_TIMEOUT = 1800  # ukončit hru po 30 min neaktivity
 ROOM_CODE_LENGTH = 4
 
 
@@ -55,6 +57,7 @@ player_last_activity: Dict[str, float] = {}
 
 ip_connections: Dict[str, int] = defaultdict(int)
 rate_limit_buckets: Dict[str, list] = defaultdict(list)
+disconnect_tasks: Dict[str, asyncio.Task] = {}
 
 
 # ╔══════════════════════════════════════════════╗
@@ -204,6 +207,21 @@ async def send_game_state_to_player(pid: str, room: GameSession):
 # ║  Background tasky                            ║
 # ╚══════════════════════════════════════════════╝
 
+async def schedule_disconnect_removal(pid: str):
+    """Po grace period odebere hráče z hry, pokud se nevrátil."""
+    try:
+        await asyncio.sleep(DISCONNECT_GRACE_PERIOD)
+    except asyncio.CancelledError:
+        return
+    finally:
+        disconnect_tasks.pop(pid, None)
+
+    if pid in connected_clients:
+        return
+
+    await remove_dead_player(pid)
+
+
 async def remove_dead_player(pid: str):
     room = get_player_room(pid)
     if not room:
@@ -213,18 +231,22 @@ async def remove_dead_player(pid: str):
         connected_clients.pop(pid, None)
         return
 
-    logger.info(f"[CLEANUP] Odstraňuji neaktivního hráče {pid} z místnosti {room.room_code}")
+    player = room.get_player(pid)
+    player_name = player.name if player else "Neznámý"
+    logger.info(f"[CLEANUP] Odstraňuji neaktivního hráče {player_name} ({pid}) z místnosti {room.room_code}")
+
     was_current = room.current_player_id == pid
     remove_player_from_room(pid, room)
 
     if room.status == GameStatus.PLAYING:
         if len(room.players) < 2 and not room.solo_mode:
-            reset_room(room)
-            room.players = []
             await broadcast_to_room(room, {
                 "type": "game_reset",
-                "message": "Hra byla resetována — hráč se odpojil",
+                "message": f"{player_name} se odpojil — hra ukončena",
             })
+            for p in list(room.players):
+                remove_player_from_room(p.player_id, room)
+            reset_room(room)
         elif was_current:
             nxt = room.get_next_player()
             if nxt:
@@ -235,11 +257,14 @@ async def remove_dead_player(pid: str):
                     room.initial_rolls_remaining[nxt.player_id] = 3
             await broadcast_to_room(room, {
                 "type": "player_disconnected",
-                "message": "Hráč se odpojil, pokračuje další",
+                "message": f"{player_name} se odpojil — pokračuje další hráč",
             })
             await send_game_state(room)
         else:
-            await broadcast_to_room(room, {"type": "player_disconnected", "message": "Hráč se odpojil"})
+            await broadcast_to_room(room, {
+                "type": "player_disconnected",
+                "message": f"{player_name} se odpojil",
+            })
             await send_game_state(room)
     elif room.status == GameStatus.WAITING:
         await send_lobby_state(room)
@@ -258,6 +283,23 @@ async def cleanup_task():
             ]
             for pid in dead:
                 await remove_dead_player(pid)
+
+            # Neaktivní hry (30 min bez aktivity)
+            inactive = [
+                (code, room) for code, room in list(rooms.items())
+                if room.status == GameStatus.PLAYING
+                and room.players
+                and now - room.last_activity > GAME_INACTIVITY_TIMEOUT
+            ]
+            for code, room in inactive:
+                logger.info(f"[CLEANUP] Místnost {code} ukončena pro neaktivitu ({GAME_INACTIVITY_TIMEOUT}s)")
+                await broadcast_to_room(room, {
+                    "type": "game_reset",
+                    "message": "Hra ukončena — 30 minut bez aktivity",
+                })
+                for p in list(room.players):
+                    remove_player_from_room(p.player_id, room)
+                reset_room(room)
 
             # Prázdné místnosti
             empty = [
@@ -494,11 +536,25 @@ async def websocket_endpoint(websocket: WebSocket):
                 connected_clients[player_id] = websocket
                 player_last_activity[player_id] = time.time()
 
+                pending = disconnect_tasks.pop(player_id, None)
+                if pending:
+                    pending.cancel()
+                    logger.info(f"[RECONNECT] Hráč {player_id} se vrátil — zrušen disconnect timer")
+
                 await websocket.send_json({
                     "type": "reconnected",
                     "player_id": player_id,
                     "room_code": room.room_code,
                 })
+
+                p = room.get_player(player_id)
+                if p and room.status == GameStatus.PLAYING:
+                    await broadcast_to_room(room, {
+                        "type": "player_reconnected",
+                        "player_id": player_id,
+                        "player_name": p.name,
+                        "message": f"Hráč {p.name} se vrátil",
+                    })
 
                 if room.status == GameStatus.WAITING:
                     await send_lobby_state(room)
@@ -534,8 +590,14 @@ async def websocket_endpoint(websocket: WebSocket):
                         "type": "player_connection_lost",
                         "player_id": player_id,
                         "player_name": p.name,
-                        "message": f"Hráč {p.name} ztratil spojení",
+                        "message": f"Hráč {p.name} ztratil spojení — {DISCONNECT_GRACE_PERIOD}s na návrat",
                     })
+                    old_task = disconnect_tasks.pop(player_id, None)
+                    if old_task:
+                        old_task.cancel()
+                    disconnect_tasks[player_id] = asyncio.create_task(
+                        schedule_disconnect_removal(player_id)
+                    )
 
 
 # ╔══════════════════════════════════════════════╗
