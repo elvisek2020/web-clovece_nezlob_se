@@ -17,11 +17,15 @@
     <div id="login-screen" class="screen">
         <div class="box login-box">
             <h2>Přihlášení</h2>
-            <input type="text" id="player-name" placeholder="Zadejte vaše jméno" maxlength="20">
-            <button id="join-btn" class="btn-primary">Připojit se</button>
+            <input type="text" id="player-name" placeholder="Vaše jméno" maxlength="20">
+            <button id="create-room-btn" class="btn-primary">Vytvořit hru</button>
+            <div class="join-room-row">
+                <input type="text" id="room-code-input" placeholder="Kód místnosti" maxlength="4" class="room-code-input">
+                <button id="join-room-btn" class="btn-primary">Připojit se</button>
+            </div>
             <button id="solo-mode-btn" class="btn-secondary solo-mode-btn">Solo režim</button>
             <div id="login-error" class="error-message"></div>
-            <div style="text-align: center; margin-top: 20px; font-size: 0.85em; color: #666;">v.20251229.0750</div>
+            <div id="app-version" style="text-align: center; margin-top: 20px; font-size: 0.85em; color: #666;"></div>
         </div>
     </div>
 
@@ -29,6 +33,7 @@
     <div id="lobby-screen" class="screen hidden">
         <div class="box lobby-box">
             <h2>Lobby</h2>
+            <div id="room-code-display" class="room-code-display"></div>
             <div id="players-list" class="players-list"></div>
             <div id="color-selection" class="color-selection" style="display: none;">
                 <label>Vyberte barvu:</label>

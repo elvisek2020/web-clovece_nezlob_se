@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional, Dict, Any
+import time
 import uuid
 
 
@@ -84,20 +85,22 @@ class Player:
 
 @dataclass
 class GameSession:
-    """Herní session"""
+    """Herní session (jedna místnost)"""
+    room_code: str = ""
     status: GameStatus = GameStatus.WAITING
     players: List[Player] = field(default_factory=list)
     current_player_id: Optional[str] = None
     last_dice_roll: int = 0
     can_roll_dice: bool = True
     winner_id: Optional[str] = None
-    initial_rolls_remaining: Dict[str, int] = field(default_factory=dict)  # Počítadlo pro první nasazení (3 pokusy)
-    solo_mode: bool = False  # Solo režim - jeden hráč hraje za všechny
-    solo_player_id: Optional[str] = None  # ID hráče v solo režimu
+    initial_rolls_remaining: Dict[str, int] = field(default_factory=dict)
+    solo_mode: bool = False
+    solo_player_id: Optional[str] = None
+    created_at: float = field(default_factory=time.time)
+    last_activity: float = field(default_factory=time.time)
     
-    # Barvy pro hráče (standardní Ludo barvy)
     COLORS = ["red", "blue", "green", "yellow"]
-    START_POSITIONS = [0, 13, 26, 39]  # Startovní pozice pro každou barvu
+    START_POSITIONS = [0, 13, 26, 39]
     
     def get_player(self, player_id: str) -> Optional[Player]:
         """Získá hráče podle ID"""
@@ -131,11 +134,10 @@ class GameSession:
         next_index = (current_index + 1) % len(self.players)
         return self.players[next_index]
     
-    def to_dict(self, for_player_id: Optional[str] = None) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """Serializuje herní stav"""
-        hide_pieces = for_player_id is not None
-        
         return {
+            "room_code": self.room_code,
             "status": self.status.value,
             "current_player_id": self.current_player_id,
             "last_dice_roll": self.last_dice_roll,
@@ -143,9 +145,6 @@ class GameSession:
             "winner_id": self.winner_id,
             "solo_mode": self.solo_mode,
             "solo_player_id": self.solo_player_id,
-            "players": [
-                p.to_dict(hide_pieces=(hide_pieces and p.player_id != for_player_id))
-                for p in self.players
-            ]
+            "players": [p.to_dict() for p in self.players]
         }
 

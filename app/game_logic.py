@@ -1,14 +1,9 @@
-import random
-import time
+import secrets
 import logging
 from typing import Optional, Dict, Any, List
 from app.models import GameSession, Player, Piece, PieceStatus, GameStatus
 
 logger = logging.getLogger(__name__)
-
-# Inicializace random generátoru s časem pro lepší random
-_random_seed = int(time.time() * 1000) % 1000000
-_random = random.Random(_random_seed)
 
 # Konstanty podle specifikace
 TRACK_LEN = 52  # track-0..51
@@ -75,9 +70,8 @@ def initialize_game(session: GameSession) -> None:
 
 
 def roll_dice() -> int:
-    """Hodí kostkou (1-6) - používá lepší random generátor"""
-    _random.seed(int(time.time() * 1000) % 1000000)
-    return _random.randint(1, 6)
+    """Hodí kostkou (1-6) — kryptograficky bezpečný generátor"""
+    return secrets.randbelow(6) + 1
 
 
 def get_piece_at_position(session: GameSession, color: str, state: str, position: int) -> Optional[Piece]:
